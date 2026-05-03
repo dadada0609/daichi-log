@@ -18,25 +18,43 @@ func main() {
 
 	repository.InitDB()
 
+	// ── 認証情報を環境変数から取得 ───────────────────────────────────
+	appUser := os.Getenv("APP_USER")
+	appPassword := os.Getenv("APP_PASSWORD")
+	useAuth := appUser != "" && appPassword != ""
+
+	// ── Gin エンジン ─────────────────────────────────────────────────
 	r := gin.Default()
 
-	// CORS Setup（開発時のみ有効にする想定。本番はモノリスなので不要だが残す）
-	config := cors.DefaultConfig()
-	config.AllowAllOrigins = true
-	config.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}
-	config.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization"}
-	r.Use(cors.New(config))
+	// CORS（開発時や外部クライアントからのアクセスを許可）
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
+	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}
+	corsConfig.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization"}
+	r.Use(cors.New(corsConfig))
 
-	// Serve uploaded files
-	r.Static("/uploads", "./uploads")
-
-	// Health Check
+	// Health Check（認証なし — Render のヘルスチェックに対応）
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
 
-	// ── API routes ──────────────────────────────────────────────────
-	api := r.Group("/api/v1")
+	// ── Basic 認証グループを構築 ─────────────────────────────────────
+	// APP_USER / APP_PASSWORD が未設定の場合は認証なしで動作（ローカル開発用）
+	var protected gin.IRoutes
+	if useAuth {
+		accounts := gin.Accounts{appUser: appPassword}
+		protected = r.Group("/", gin.BasicAuth(accounts))
+		log.Printf("Basic Auth enabled for user: %s", appUser)
+	} else {
+		protected = r.Group("/")
+		log.Println("Basic Auth disabled (APP_USER / APP_PASSWORD not set)")
+	}
+
+	// ── アップロードファイル配信（認証内） ───────────────────────────
+	protected.(*gin.RouterGroup).Static("/uploads", "./uploads")
+
+	// ── API ルート（認証内） ─────────────────────────────────────────
+	api := protected.(*gin.RouterGroup).Group("/api/v1")
 	{
 		// Global Search
 		api.GET("/search", handlers.SearchAll)
@@ -60,28 +78,42 @@ func main() {
 		api.POST("/files", handlers.UploadFile)
 	}
 
-	// ── SPA Static Serving ──────────────────────────────────────────
-	// frontend/dist をビルド後に backend/ 直下へコピーする想定。
-	// FRONTEND_DIST 環境変数で変更可（デフォルト: ./dist）
+	// ── フロントエンド静的配信（認証内） ─────────────────────────────
+	// バイナリ実行ディレクトリと同じ場所にある ./dist を参照する。
+	// Render Build Command で: cp -r frontend/dist ./dist として配置。
 	distDir := os.Getenv("FRONTEND_DIST")
 	if distDir == "" {
 		distDir = "./dist"
 	}
+	assetsDir := filepath.Join(distDir, "assets")
 
-	// dist/assets 等の静的アセットをそのままサーブ
-	r.Static("/assets", filepath.Join(distDir, "assets"))
+	// /assets/* → dist/assets/
+	protected.(*gin.RouterGroup).Static("/assets", assetsDir)
 
-	// API・uploads・assets 以外のすべてのパスで index.html を返す（SPA フォールバック）
+	// SPA フォールバック: /api・/uploads・/assets 以外はすべて index.html を返す
 	r.NoRoute(func(c *gin.Context) {
+		// BasicAuth が有効な場合はここでも認証を検証する
+		if useAuth {
+			user, password, ok := c.Request.BasicAuth()
+			if !ok || user != appUser || password != appPassword {
+				c.Header("WWW-Authenticate", `Basic realm="daichi-log"`)
+				c.AbortWithStatus(http.StatusUnauthorized)
+				return
+			}
+		}
+
 		indexPath := filepath.Join(distDir, "index.html")
 		if _, err := os.Stat(indexPath); err == nil {
 			c.File(indexPath)
 		} else {
-			// dist が存在しない場合（ローカル開発など）は 404 を返す
-			c.JSON(http.StatusNotFound, gin.H{"error": "frontend not built"})
+			c.JSON(http.StatusNotFound, gin.H{
+				"error":   "frontend not built",
+				"message": "Run: cd frontend && npm run build && cp -r dist ../dist",
+			})
 		}
 	})
 
+	// ── 起動 ─────────────────────────────────────────────────────────
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
