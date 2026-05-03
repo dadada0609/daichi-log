@@ -1,0 +1,30 @@
+# ===== ルートレベル =====
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# エディタ
+.vscode/
+*.swp
+*.swo
+
+# ===== frontend =====
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# ===== backend =====
+backend/.env
+backend/*.db
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/daichi-log  # バイナリ
+
+# ===== Docker =====
+# docker-compose は含める（公開設定が入っていないなら）
