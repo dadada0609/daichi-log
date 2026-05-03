@@ -1,6 +1,8 @@
 import { Issue, WikiPage, GitCommit, FileNode, SearchResult } from '../types';
 
-const API_BASE = '/api/v1';
+// 本番: VITE_API_BASE (e.g. https://daichi-log-backend.onrender.com)
+// ローカル: Viteプロキシ経由のため空文字で問題なし
+const API_BASE = (import.meta.env.VITE_API_BASE ?? '') + '/api/v1';
 
 export const api = {
   // Search

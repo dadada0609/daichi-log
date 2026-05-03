@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/daichi-log/backend/internal/handlers"
 	"github.com/daichi-log/backend/internal/repository"
@@ -19,7 +20,7 @@ func main() {
 
 	r := gin.Default()
 
-	// CORS Setup
+	// CORS Setup（開発時のみ有効にする想定。本番はモノリスなので不要だが残す）
 	config := cors.DefaultConfig()
 	config.AllowAllOrigins = true
 	config.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}
@@ -34,6 +35,7 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
 
+	// ── API routes ──────────────────────────────────────────────────
 	api := r.Group("/api/v1")
 	{
 		// Global Search
@@ -58,12 +60,34 @@ func main() {
 		api.POST("/files", handlers.UploadFile)
 	}
 
+	// ── SPA Static Serving ──────────────────────────────────────────
+	// frontend/dist をビルド後に backend/ 直下へコピーする想定。
+	// FRONTEND_DIST 環境変数で変更可（デフォルト: ./dist）
+	distDir := os.Getenv("FRONTEND_DIST")
+	if distDir == "" {
+		distDir = "./dist"
+	}
+
+	// dist/assets 等の静的アセットをそのままサーブ
+	r.Static("/assets", filepath.Join(distDir, "assets"))
+
+	// API・uploads・assets 以外のすべてのパスで index.html を返す（SPA フォールバック）
+	r.NoRoute(func(c *gin.Context) {
+		indexPath := filepath.Join(distDir, "index.html")
+		if _, err := os.Stat(indexPath); err == nil {
+			c.File(indexPath)
+		} else {
+			// dist が存在しない場合（ローカル開発など）は 404 を返す
+			c.JSON(http.StatusNotFound, gin.H{"error": "frontend not built"})
+		}
+	})
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 	log.Println("Server is running on port " + port)
 	if err := r.Run(":" + port); err != nil {
-		log.Fatalf("Failed to run server: %v", err)
+		log.Fatalf("Failed to run server: %v\n", err)
 	}
 }
