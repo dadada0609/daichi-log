@@ -133,7 +133,7 @@ const IssueForm: React.FC<Props> = ({ projectKey, initialStatus, onSuccess, onCa
   const isSubmitDisabled = !formData.title?.trim() || isSaving;
 
   return (
-    <div className="flex flex-col h-full bg-[#f6f8fa] w-full">
+    <div className="flex flex-col h-full bg-[#f6f8fa] w-full" style={{ maxWidth: '896px', margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <div className="flex justify-between items-center px-6 py-4 bg-white border-b border-gray-200 shadow-sm">
         <div className="flex items-center gap-4">
