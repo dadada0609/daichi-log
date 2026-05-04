@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Issue } from '../types';
 import { api } from '../api/client';
-import { Save, Eye, Edit2, Bold, Italic, Link as LinkIcon, Image as ImageIcon, ChevronLeft, Layers } from 'lucide-react';
+import { Bold, Italic, Link as LinkIcon, Image as ImageIcon, ChevronLeft, Layers } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
 interface Props {
