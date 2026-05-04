@@ -133,7 +133,7 @@ const IssueForm: React.FC<Props> = ({ projectKey, initialStatus, onSuccess, onCa
   const isSubmitDisabled = !formData.title?.trim() || isSaving;
 
   return (
-    <div className="flex flex-col h-full bg-[#f4f5f7] w-full">
+    <div className="flex flex-col h-full bg-[#f0f0f0] w-full">
       {/* Header */}
       <div className="flex justify-between items-center px-12 py-4 bg-white border-b border-gray-200 shadow-sm shrink-0">
         <div className="flex items-center gap-4">
@@ -162,7 +162,7 @@ const IssueForm: React.FC<Props> = ({ projectKey, initialStatus, onSuccess, onCa
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto px-12 py-8 bg-[#f4f5f7]">
+      <div className="flex-1 overflow-y-auto px-12 py-8 bg-[#f0f0f0]">
         <div className="w-full bg-white border border-gray-200 shadow-sm p-8 rounded space-y-8">
           
           {/* 親課題 */}
@@ -273,7 +273,7 @@ const IssueForm: React.FC<Props> = ({ projectKey, initialStatus, onSuccess, onCa
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <select
-                      className="flex-1 p-2 border border-gray-300 rounded text-sm bg-gray-50 outline-none hover:bg-white focus:bg-white transition-colors"
+                      className="flex-1 p-2 border border-gray-300 rounded text-sm bg-white outline-none hover:bg-white focus:bg-white transition-colors"
                       value={formData.categoryIds?.[0] || ''}
                       onChange={(e) => handleArraySelect('categoryIds', e.target.value)}
                     >
@@ -338,7 +338,7 @@ const IssueForm: React.FC<Props> = ({ projectKey, initialStatus, onSuccess, onCa
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <select
-                      className="flex-1 p-2 border border-gray-300 rounded text-sm bg-gray-50 outline-none hover:bg-white focus:bg-white transition-colors"
+                      className="flex-1 p-2 border border-gray-300 rounded text-sm bg-white outline-none hover:bg-white focus:bg-white transition-colors"
                       value={formData.milestoneIds?.[0] || ''}
                       onChange={(e) => handleArraySelect('milestoneIds', e.target.value)}
                     >
@@ -356,7 +356,7 @@ const IssueForm: React.FC<Props> = ({ projectKey, initialStatus, onSuccess, onCa
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <select
-                      className="flex-1 p-2 border border-gray-300 rounded text-sm bg-gray-50 outline-none hover:bg-white focus:bg-white transition-colors"
+                      className="flex-1 p-2 border border-gray-300 rounded text-sm bg-white outline-none hover:bg-white focus:bg-white transition-colors"
                       value={formData.versionIds?.[0] || ''}
                       onChange={(e) => handleArraySelect('versionIds', e.target.value)}
                     >

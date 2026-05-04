@@ -6,7 +6,7 @@
   --text-sub: #666666;
   --border-color: #e2e6ea;
   --link-color: #4488c5;
-  --primary-color: #ea5c83;
+  --primary-color: #de7c9b;
   
   /* Status Colors */
   --status-open: #ed8077;
@@ -19,7 +19,7 @@
   --sidebar-text: #ffffff;
   --sidebar-active-bg: #ffffff;
   --sidebar-active-text: var(--primary-color);
-  --main-bg: #f4f5f7;
+  --main-bg: #f0f0f0;
   --panel-bg: #ffffff;
 }
 
