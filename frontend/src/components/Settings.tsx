@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Save } from 'lucide-react';
 
 const Settings: React.FC = () => {
-  const [themeColor, setThemeColor] = useState('#ea5c83');
+  const [themeColor, setThemeColor] = useState('#de7c9b');
   const [projectName, setProjectName] = useState('SDK_TEST_INTERNAL');
   const [projectKey, setProjectKey] = useState('SDK_TI');
   const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
-    const savedColor = localStorage.getItem('themeColor') || '#ea5c83';
+    const savedColor = localStorage.getItem('themeColor') || '#de7c9b';
     const savedName = localStorage.getItem('projectName') || 'SDK_TEST_INTERNAL';
     const savedKey = localStorage.getItem('projectKey') || 'SDK_TI';
     setThemeColor(savedColor);
@@ -29,7 +29,7 @@ const Settings: React.FC = () => {
     setTimeout(() => setIsSaved(false), 3000);
   };
 
-  const presets = ['#ea5c83', '#4488c5', '#a1af2f', '#f29c38', '#8c564b'];
+  const presets = ['#de7c9b', '#4488c5', '#a1af2f', '#f29c38', '#8c564b'];
 
   return (
     <div className="panel" style={{ flex: 1, display: 'flex', flexDirection: 'column', maxWidth: '600px', margin: '24px auto' }}>

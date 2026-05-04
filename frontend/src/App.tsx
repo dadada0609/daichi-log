@@ -68,7 +68,7 @@ const App: React.FC = () => {
   const [createModalStatus, setCreateModalStatus] = useState('OPEN');
 
   useEffect(() => {
-    const color = localStorage.getItem('themeColor') || '#ea5c83';
+    const color = localStorage.getItem('themeColor') || '#de7c9b';
     document.documentElement.style.setProperty('--primary-color', color);
   }, []);
 
