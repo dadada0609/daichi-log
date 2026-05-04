@@ -92,23 +92,19 @@ body {
 }
 
 .sidebar-item {
-  color: #ffffff !important;
+  color: var(--sidebar-text);
   text-decoration: none;
   padding: 8px 16px;
   display: flex;
   align-items: center;
   gap: 10px;
   font-size: 13px;
-  transition: background-color 0.1s;
-}
-
-.sidebar-item:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-  color: #ffffff !important;
+  transition: all 0.1s;
 }
 
 .sidebar-item:hover {
   background-color: var(--sidebar-hover);
+  color: var(--sidebar-text);
 }
 
 .sidebar-item.active {

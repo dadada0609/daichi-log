@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import { Home, Plus, List, Columns, GanttChart as GanttIcon, FileText, Book, Folder, Settings as SettingsIcon, Menu } from 'lucide-react';
 import IssueBoard from './components/IssueBoard';
 import GanttChart from './components/GanttChart';
@@ -21,20 +21,20 @@ const Sidebar = () => {
         <Menu size={20} style={{ marginRight: '12px' }} />
         Backlog Clone
       </div>
-      <Link to="/" className={`sidebar-item ${isActive('/')}`}><Home size={16} /> ホーム</Link>
-      <Link to="/issues/new" className={`sidebar-item ${isActive('/issues/new')}`} style={{ color: '#ffffff', fontWeight: 'bold' }}>
+      <NavLink to="/" className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}><Home size={16} /> ホーム</NavLink>
+      <NavLink to="/issues/new" className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}>
         <Plus size={16} /> 課題の追加
-      </Link>
-      <Link to="/issues" className={`sidebar-item ${isActive('/issues')}`}><List size={16} /> 課題</Link>
-      <Link to="/board" className={`sidebar-item ${isActive('/board')}`}><Columns size={16} /> ボード</Link>
-      <Link to="/gantt" className={`sidebar-item ${isActive('/gantt')}`}><GanttIcon size={16} /> ガントチャート</Link>
-      <Link to="/documents" className={`sidebar-item ${isActive('/documents')}`}><FileText size={16} /> ドキュメント</Link>
-      <Link to="/wiki" className={`sidebar-item ${location.pathname.startsWith('/wiki') ? 'active' : ''}`}><Book size={16} /> Wiki</Link>
-      <Link to="/files" className={`sidebar-item ${isActive('/files')}`}><Folder size={16} /> ファイル</Link>
+      </NavLink>
+      <NavLink to="/issues" className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}><List size={16} /> 課題</NavLink>
+      <NavLink to="/board" className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}><Columns size={16} /> ボード</NavLink>
+      <NavLink to="/gantt" className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}><GanttIcon size={16} /> ガントチャート</NavLink>
+      <NavLink to="/documents" className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}><FileText size={16} /> ドキュメント</NavLink>
+      <NavLink to="/wiki" className={({ isActive }) => `sidebar-item ${isActive || location.pathname.startsWith('/wiki') ? 'active' : ''}`}><Book size={16} /> Wiki</NavLink>
+      <NavLink to="/files" className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}><Folder size={16} /> ファイル</NavLink>
       <div style={{ flex: 1 }} />
-      <Link to="/settings" className={`sidebar-item ${isActive('/settings')}`} style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+      <NavLink to="/settings" className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`} style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}>
         <SettingsIcon size={16} /> プロジェクト設定
-      </Link>
+      </NavLink>
     </div>
   );
 };
