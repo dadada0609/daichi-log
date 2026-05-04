@@ -13,7 +13,6 @@ import Settings from './components/Settings';
 
 const Sidebar = () => {
   const location = useLocation();
-  const isActive = (path: string) => location.pathname === path ? 'active' : '';
 
   return (
     <div className="sidebar">
