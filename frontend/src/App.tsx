@@ -7,6 +7,7 @@ import WikiViewer from './components/WikiViewer';
 import FileSection from './components/FileSection';
 import IssueList from './components/IssueList';
 import IssueCreatePage from './components/IssueCreatePage';
+import IssueCreateModal from './components/IssueCreateModal';
 import GlobalSearch from './components/GlobalSearch';
 import Settings from './components/Settings';
 
@@ -64,6 +65,8 @@ const TopNav = () => {
 
 const App: React.FC = () => {
   const [refreshCount, setRefreshCount] = useState(0);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [createModalStatus, setCreateModalStatus] = useState('OPEN');
 
   useEffect(() => {
     const color = localStorage.getItem('themeColor') || '#ea5c83';
@@ -79,7 +82,7 @@ const App: React.FC = () => {
           <div className="main-content">
             <Routes>
               <Route path="/" element={<div className="panel"><div className="panel-header">プロジェクトホーム</div><div className="panel-body">最近の更新履歴が表示されます...</div></div>} />
-              <Route path="/board" element={<IssueBoard refreshCount={refreshCount} onOpenCreateModal={() => {}} />} />
+              <Route path="/board" element={<IssueBoard refreshCount={refreshCount} onOpenCreateModal={(status) => { setCreateModalStatus(status); setIsCreateModalOpen(true); }} />} />
               <Route path="/gantt" element={<GanttChart refreshCount={refreshCount} />} />
               <Route path="/wiki" element={<WikiViewer />} />
               <Route path="/wiki/:pageId" element={<WikiViewer />} />
@@ -90,6 +93,13 @@ const App: React.FC = () => {
               <Route path="/settings" element={<Settings />} />
             </Routes>
           </div>
+          {isCreateModalOpen && (
+            <IssueCreateModal 
+              initialStatus={createModalStatus} 
+              onClose={() => setIsCreateModalOpen(false)}
+              onSuccess={() => setRefreshCount(prev => prev + 1)}
+            />
+          )}
         </div>
       </div>
     </Router>

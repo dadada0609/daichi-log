@@ -92,7 +92,7 @@ body {
 }
 
 .sidebar-item {
-  color: var(--sidebar-text);
+  color: #ffffff !important;
   text-decoration: none;
   padding: 8px 16px;
   display: flex;
