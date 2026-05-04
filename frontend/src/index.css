@@ -103,6 +103,11 @@ body {
 }
 
 .sidebar-item:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #ffffff !important;
+}
+
+.sidebar-item:hover {
   background-color: var(--sidebar-hover);
 }
 

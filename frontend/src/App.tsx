@@ -22,7 +22,7 @@ const Sidebar = () => {
         Backlog Clone
       </div>
       <Link to="/" className={`sidebar-item ${isActive('/')}`}><Home size={16} /> ホーム</Link>
-      <Link to="/issues/new" className={`sidebar-item ${isActive('/issues/new')}`} style={{ color: 'var(--primary-color)', fontWeight: 'bold' }}>
+      <Link to="/issues/new" className={`sidebar-item ${isActive('/issues/new')}`} style={{ color: '#ffffff', fontWeight: 'bold' }}>
         <Plus size={16} /> 課題の追加
       </Link>
       <Link to="/issues" className={`sidebar-item ${isActive('/issues')}`}><List size={16} /> 課題</Link>
